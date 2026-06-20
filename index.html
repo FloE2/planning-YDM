@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pilotage des projets EPS — 2026-2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F6F8; --surface:#FFFFFF; --ink:#16202E; --muted:#647082; --faint:#8E99A8;
+    --line:#E4E8ED; --line2:#EEF1F4; --today:#111827;
+    --r:10px; --label-w:240px;
+    --disp:"Space Grotesk", system-ui, sans-serif;
+    --body:"Inter", system-ui, -apple-system, sans-serif;
+    --mono:"Space Mono", ui-monospace, monospace;
+    --todayfrac:0;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--body); background:var(--bg); color:var(--ink); font-size:14px; line-height:1.45; -webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:var(--disp); margin:0; font-weight:600; letter-spacing:-.01em;}
+  .wrap{max-width:1240px; margin:0 auto; padding:22px 20px 80px;}
+
+  /* ---- Header ---- */
+  header.top{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; padding-bottom:16px; border-bottom:1px solid var(--line);}
+  .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint);}
+  header.top h1{font-size:25px; margin-top:4px;}
+  header.top .sub{color:var(--muted); font-size:13px; margin-top:3px;}
+  .nowbox{text-align:right; min-width:210px;}
+  .nowbox .date{font-family:var(--mono); font-size:13px; color:var(--ink); font-weight:700;}
+  .nowbox .note{font-size:12px; color:var(--muted); margin-top:2px;}
+  .prog{margin-top:8px;}
+  .prog .bar{height:7px; background:var(--line); border-radius:99px; overflow:hidden; width:200px; margin-left:auto;}
+  .prog .bar > i{display:block; height:100%; background:var(--ink); border-radius:99px; transition:width .4s;}
+  .prog .lab{font-size:12px; color:var(--muted); margin-top:4px;}
+
+  /* ---- Toolbar ---- */
+  .toolbar{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:18px 0 6px;}
+  .seg{display:inline-flex; background:var(--surface); border:1px solid var(--line); border-radius:99px; padding:3px;}
+  .seg button{border:0; background:transparent; font:inherit; font-weight:600; color:var(--muted); padding:6px 16px; border-radius:99px; cursor:pointer;}
+  .seg button.on{background:var(--ink); color:#fff;}
+  .btn{border:1px solid var(--line); background:var(--surface); color:var(--ink); font:inherit; font-weight:600; padding:8px 14px; border-radius:99px; cursor:pointer; display:inline-flex; align-items:center; gap:6px;}
+  .btn:hover{border-color:#cfd6de;}
+  .btn.primary{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .btn.ghost{border-color:transparent; color:var(--muted);}
+  .spacer{flex:1;}
+  .search{border:1px solid var(--line); border-radius:99px; background:var(--surface); padding:8px 14px; font:inherit; min-width:180px;}
+
+  /* ---- Filters ---- */
+  .filters{display:flex; gap:18px; flex-wrap:wrap; margin:14px 0 18px; padding:14px 16px; background:var(--surface); border:1px solid var(--line); border-radius:var(--r);}
+  .fgroup{display:flex; flex-direction:column; gap:8px;}
+  .fgroup .ttl{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint);}
+  .chips{display:flex; gap:6px; flex-wrap:wrap;}
+  .chip{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); background:#fff; border-radius:99px; padding:4px 11px; font-size:12.5px; font-weight:500; cursor:pointer; color:var(--muted); user-select:none;}
+  .chip .dot{width:9px; height:9px; border-radius:50%; background:var(--c,#ccc);}
+  .chip.on{color:var(--ink); border-color:var(--c,#bbb); background:color-mix(in srgb, var(--c,#000) 8%, #fff);}
+
+  /* ---- Timeline ---- */
+  .panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); overflow:hidden;}
+  .tl{position:relative; overflow-x:auto;}
+  .tl-inner{min-width:840px;}
+  .tl-head{display:flex; position:sticky; top:0; z-index:5; background:var(--surface); border-bottom:1px solid var(--line);}
+  .tl-head .corner{width:var(--label-w); flex:0 0 var(--label-w); padding:10px 14px; font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint);}
+  .tl-head .months{flex:1; display:grid; grid-template-columns:repeat(11,1fr);}
+  .tl-head .mcell{padding:9px 4px; text-align:center; font-size:12px; font-weight:600; border-left:1px solid var(--line2); color:var(--ink);}
+  .tl-head .mcell small{display:block; font-family:var(--mono); font-weight:400; font-size:9.5px; color:var(--faint);}
+  .tl-body{position:relative;}
+  .lane-head{display:flex; align-items:center; gap:8px; padding:7px 14px; background:color-mix(in srgb, var(--c) 7%, #fff); border-top:1px solid var(--line); border-bottom:1px solid var(--line2);}
+  .lane-head .pdot{width:10px; height:10px; border-radius:3px; background:var(--c);}
+  .lane-head .pname{font-family:var(--disp); font-weight:600; font-size:13.5px;}
+  .lane-head .pcount{font-family:var(--mono); font-size:11px; color:var(--muted);}
+  .lane-row{display:flex; align-items:stretch; border-bottom:1px solid var(--line2); min-height:38px;}
+  .lane-row:hover{background:#FAFBFC;}
+  .lane-row .label{width:var(--label-w); flex:0 0 var(--label-w); padding:6px 14px 6px 22px; display:flex; align-items:center; gap:8px;}
+  .lane-row .label .tt{font-size:12.5px; line-height:1.3; cursor:pointer;}
+  .lane-row.done .tt{color:var(--faint); text-decoration:line-through;}
+  .lane-row .track{flex:1; display:grid; grid-template-columns:repeat(11,1fr); align-items:center; position:relative;}
+  .lane-row .track::before{content:""; position:absolute; inset:0; background-image:repeating-linear-gradient(to right, transparent, transparent calc((100%/11) - 1px), var(--line2) calc((100%/11) - 1px), var(--line2) calc(100%/11));}
+  .bar{position:relative; z-index:2; grid-column:var(--cs)/var(--ce); height:18px; border-radius:6px; background:var(--c); margin:0 4px; display:flex; align-items:center; padding:0 8px; cursor:pointer; box-shadow:0 1px 2px rgba(20,32,46,.12);}
+  .bar.crit{background:repeating-linear-gradient(45deg, var(--c), var(--c) 6px, color-mix(in srgb, var(--c) 70%, #000) 6px, color-mix(in srgb, var(--c) 70%, #000) 12px);}
+  .bar .blab{font-size:10px; color:#fff; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .lane-row.done .bar{opacity:.32;}
+  .ck{appearance:none; -webkit-appearance:none; width:16px; height:16px; border:1.6px solid #c3cbd4; border-radius:5px; cursor:pointer; flex:0 0 auto; position:relative; background:#fff;}
+  .ck:checked{background:var(--ink); border-color:var(--ink);}
+  .ck:checked::after{content:"✓"; color:#fff; font-size:11px; position:absolute; top:-1px; left:2px;}
+  .today-line{position:absolute; top:0; bottom:0; width:0; border-left:2px dashed var(--today); z-index:6; left:calc(var(--label-w) + (100% - var(--label-w)) * var(--todayfrac)); pointer-events:none;}
+  .today-line .pin{position:absolute; top:-1px; left:-17px; background:var(--today); color:#fff; font-family:var(--mono); font-size:9px; padding:2px 5px; border-radius:4px; white-space:nowrap;}
+  .crit-flag{font-family:var(--mono); font-size:9px; font-weight:700; color:#B91C1C; border:1px solid #F3C9C9; background:#FEF2F2; padding:1px 4px; border-radius:4px; letter-spacing:.04em;}
+
+  /* ---- List ---- */
+  .list-proj{margin-bottom:16px; border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--surface);}
+  .list-proj > .lh{display:flex; align-items:center; gap:10px; padding:11px 16px; background:color-mix(in srgb, var(--c) 8%, #fff); border-bottom:1px solid var(--line2);}
+  .list-proj > .lh .pdot{width:11px; height:11px; border-radius:3px; background:var(--c);}
+  .list-proj > .lh h3{font-size:14.5px;}
+  .list-proj > .lh .mini{margin-left:auto; display:flex; align-items:center; gap:8px;}
+  .list-proj > .lh .mini .bar{width:90px; height:6px; background:var(--line); border-radius:99px; overflow:hidden;}
+  .list-proj > .lh .mini .bar > i{display:block; height:100%; background:var(--c); border-radius:99px;}
+  .list-proj > .lh .mini span{font-family:var(--mono); font-size:11px; color:var(--muted);}
+  .titem{display:flex; align-items:flex-start; gap:12px; padding:10px 16px; border-bottom:1px solid var(--line2);}
+  .titem:last-child{border-bottom:0;}
+  .titem .mid{flex:1; min-width:0;}
+  .titem .tt{font-size:13.5px; font-weight:500; cursor:pointer;}
+  .titem.done .tt{color:var(--faint); text-decoration:line-through;}
+  .titem .meta{display:flex; gap:7px; flex-wrap:wrap; align-items:center; margin-top:5px;}
+  .when{font-family:var(--mono); font-size:11px; color:var(--ink); background:var(--line2); padding:2px 7px; border-radius:5px;}
+  .when.late{background:#FEF2F2; color:#B91C1C;}
+  .when.now{background:#ECFDF5; color:#047857;}
+  .atag{display:inline-flex; align-items:center; gap:5px; font-size:11px; color:var(--muted); border:1px solid var(--line); border-radius:99px; padding:1px 8px;}
+  .atag .d{width:7px; height:7px; border-radius:50%; background:var(--ac,#999);}
+  .tnote{font-size:11.5px; color:var(--muted); margin-top:4px; font-style:italic;}
+  .titem .edit{border:0; background:transparent; color:var(--faint); cursor:pointer; font-size:16px; padding:2px 6px; border-radius:6px;}
+  .titem .edit:hover{background:var(--line2); color:var(--ink);}
+
+  .view{display:none;}
+  .view.on{display:block;}
+
+  /* ---- Modal ---- */
+  .ov{position:fixed; inset:0; background:rgba(16,24,38,.42); display:none; align-items:center; justify-content:center; z-index:50; padding:18px;}
+  .ov.on{display:flex;}
+  .modal{background:#fff; border-radius:14px; width:100%; max-width:520px; max-height:92vh; overflow:auto; box-shadow:0 20px 60px rgba(0,0,0,.25);}
+  .modal h2{font-size:18px; padding:18px 22px 0;}
+  .mbody{padding:14px 22px 4px; display:flex; flex-direction:column; gap:13px;}
+  .field label{display:block; font-size:11.5px; font-weight:600; color:var(--muted); margin-bottom:5px; text-transform:uppercase; letter-spacing:.04em; font-family:var(--mono); font-weight:400; font-size:10.5px; letter-spacing:.1em;}
+  .field input[type=text], .field textarea, .field select{width:100%; border:1px solid var(--line); border-radius:9px; padding:9px 11px; font:inherit; background:#fff;}
+  .field textarea{resize:vertical; min-height:54px;}
+  .row2{display:flex; gap:12px;} .row2 > *{flex:1;}
+  .ckline{display:flex; gap:8px; align-items:center;}
+  .checkgrid{display:flex; gap:8px; flex-wrap:wrap;}
+  .checkgrid label{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:99px; padding:5px 11px; cursor:pointer; font-size:12.5px; text-transform:none; letter-spacing:0; color:var(--ink); font-family:var(--body);}
+  .checkgrid label.on{background:var(--ink); color:#fff; border-color:var(--ink);}
+  .checkgrid input{display:none;}
+  .mfoot{display:flex; gap:10px; padding:16px 22px 20px; border-top:1px solid var(--line2); margin-top:8px;}
+  .mfoot .del{color:#B91C1C; border-color:#F3C9C9;}
+  .legend{display:flex; gap:14px; flex-wrap:wrap; padding:10px 16px; font-size:11.5px; color:var(--muted); border-top:1px solid var(--line2);}
+  .legend .li{display:inline-flex; align-items:center; gap:6px;} .legend .li i{width:10px; height:10px; border-radius:3px; display:inline-block;}
+  .empty{padding:40px; text-align:center; color:var(--faint);}
+
+  @media (max-width:640px){
+    :root{--label-w:150px;}
+    header.top h1{font-size:21px;}
+    .nowbox{text-align:left; min-width:0;} .prog .bar{margin-left:0;}
+  }
+
+  /* ---- Print ---- */
+  @media print{
+    @page{size:A4 landscape; margin:10mm;}
+    body{background:#fff; font-size:10px;}
+    .no-print{display:none !important;}
+    .wrap{max-width:none; padding:0;}
+    .view{display:block !important;}
+    .tl{overflow:visible;} .tl-inner{min-width:0; width:100%;}
+    .panel,.list-proj{break-inside:avoid; box-shadow:none;}
+    .view#view-list{margin-top:14px; break-before:page;}
+    .bar .blab{font-size:8px;}
+    .today-line{border-color:#888;}
+    header.top{border-color:#000;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <div class="eyebrow">Collège Yves du Manoir · Vaucresson — EPS</div>
+      <h1>Pilotage des projets — Année 2026-2027</h1>
+      <div class="sub">Rétro-planning d'équipe · F. Eude &amp; E. Cosperec · qui fait quoi, et quand</div>
+    </div>
+    <div class="nowbox">
+      <div class="date" id="todayDate">—</div>
+      <div class="note" id="todayNote"></div>
+      <div class="prog"><div class="bar"><i id="progFill" style="width:0"></i></div><div class="lab" id="progLab">—</div></div>
+    </div>
+  </header>
+
+  <div class="toolbar no-print">
+    <div class="seg">
+      <button id="vTimeline" class="on" onclick="setView('timeline')">Timeline</button>
+      <button id="vList" onclick="setView('list')">Liste</button>
+    </div>
+    <input class="search" id="search" type="text" placeholder="Rechercher une tâche…" oninput="render()">
+    <span class="spacer"></span>
+    <button class="btn primary" onclick="openTask()">+ Tâche</button>
+    <button class="btn" onclick="openProject()">+ Projet</button>
+    <button class="btn" onclick="openActor()">+ Acteur</button>
+    <button class="btn" onclick="window.print()">Imprimer</button>
+    <button class="btn ghost" onclick="resetAll()">Réinitialiser</button>
+  </div>
+
+  <div class="filters no-print">
+    <div class="fgroup">
+      <span class="ttl">Projets</span>
+      <div class="chips" id="projFilter"></div>
+    </div>
+    <div class="fgroup">
+      <span class="ttl">Acteurs</span>
+      <div class="chips" id="actorFilter"></div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="view on" id="view-timeline">
+    <div class="panel">
+      <div class="tl"><div class="tl-inner" id="tlInner"></div></div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+
+  <!-- LIST -->
+  <div class="view" id="view-list">
+    <div id="listWrap"></div>
+  </div>
+
+</div>
+
+<!-- Task modal -->
+<div class="ov" id="ovTask">
+  <div class="modal">
+    <h2 id="taskTitle">Nouvelle tâche</h2>
+    <div class="mbody">
+      <div class="field"><label>Intitulé</label><input type="text" id="fTitle" placeholder="Ex : Réserver les chalets et le train"></div>
+      <div class="field"><label>Projet</label><select id="fProject"></select></div>
+      <div class="row2">
+        <div class="field"><label>Mois de début</label><select id="fStart"></select></div>
+        <div class="field"><label>Mois de fin</label><select id="fEnd"></select></div>
+      </div>
+      <div class="field"><label>Acteurs concernés</label><div class="checkgrid" id="fActors"></div></div>
+      <div class="field"><label>Note (optionnel)</label><textarea id="fNote" placeholder="Précision, contact, lien…"></textarea></div>
+      <div class="ckline"><input type="checkbox" id="fCrit" class="ck"><label for="fCrit" style="margin:0; font-family:var(--body); text-transform:none; letter-spacing:0; font-size:13px; color:var(--ink); font-weight:500;">Échéance critique (à ne pas rater / longue anticipation)</label></div>
+    </div>
+    <div class="mfoot">
+      <button class="btn primary" onclick="saveTask()">Enregistrer</button>
+      <button class="btn" onclick="closeOv('ovTask')">Annuler</button>
+      <span class="spacer"></span>
+      <button class="btn del" id="delTaskBtn" style="display:none" onclick="deleteTask()">Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- Project modal -->
+<div class="ov" id="ovProject">
+  <div class="modal" style="max-width:420px">
+    <h2>Nouveau projet</h2>
+    <div class="mbody">
+      <div class="field"><label>Nom du projet</label><input type="text" id="pName" placeholder="Ex : Tournoi Recyclerie"></div>
+      <div class="field"><label>Couleur</label><input type="color" id="pColor" value="#0EA5A4" style="width:60px; height:38px; padding:3px; border:1px solid var(--line); border-radius:9px;"></div>
+    </div>
+    <div class="mfoot"><button class="btn primary" onclick="saveProject()">Créer</button><button class="btn" onclick="closeOv('ovProject')">Annuler</button></div>
+  </div>
+</div>
+
+<!-- Actor modal -->
+<div class="ov" id="ovActor">
+  <div class="modal" style="max-width:420px">
+    <h2>Nouvel acteur</h2>
+    <div class="mbody">
+      <div class="field"><label>Nom de l'acteur</label><input type="text" id="aName" placeholder="Ex : Prof. Sciences Physiques"></div>
+      <div class="field"><label>Couleur (repère)</label><input type="color" id="aColor" value="#64748B" style="width:60px; height:38px; padding:3px; border:1px solid var(--line); border-radius:9px;"></div>
+    </div>
+    <div class="mfoot"><button class="btn primary" onclick="saveActor()">Créer</button><button class="btn" onclick="closeOv('ovActor')">Annuler</button></div>
+  </div>
+</div>
+
+<script>
+/* ============ Données ============ */
+const MONTHS = ["Sept.","Oct.","Nov.","Déc.","Janv.","Févr.","Mars","Avr.","Mai","Juin","Juil."];
+const MYEAR  = ["2026","2026","2026","2026","2027","2027","2027","2027","2027","2027","2027"];
+const STORAGE_KEY = "pilotage_eps_ydm_2026_2027_v1";
+
+function defaultData(){
+  const P = [
+    {id:"ski",   name:"Séjour Ski Cohésion (6e)",        c:"#2563EB"},
+    {id:"sante", name:"EPS Santé — Condition physique",  c:"#059669"},
+    {id:"as",    name:"AS / UNSS — fonctionnement",      c:"#EA580C"},
+    {id:"compet",name:"Compétitions UNSS / AS",          c:"#DB2777"},
+    {id:"psc1",  name:"PSC1 — Secourisme (5e)",          c:"#DC2626"},
+    {id:"podo",  name:"Podomètre × SVT (5e)",            c:"#7C3AED"},
+    {id:"pleinair",name:"Plein Air Hauts-de-Seine",      c:"#0891B2"},
+    {id:"concert", name:"Concertations / Réunions",      c:"#475569"},
+    {id:"autre", name:"Autres projets",                  c:"#CA8A04"}
+  ];
+  const A = [
+    {id:"eps",   name:"Profs EPS",        c:"#0EA5E9"},
+    {id:"disc",  name:"SVT / Sc. Phys.",  c:"#8B5CF6"},
+    {id:"admin", name:"Direction",        c:"#F59E0B"},
+    {id:"ambass",name:"Ambassadeurs",     c:"#10B981"},
+    {id:"ext",   name:"Partenaires ext.", c:"#64748B"}
+  ];
+  let n=0; const id=()=>"t"+(n++);
+  const t=(p,title,s,e,act,crit,note)=>({id:id(),p,title,s,e:(e==null?s:e),act,crit:!!crit,note:note||"",done:false});
+  const T = [
+    // SKI
+    t("ski","Relancer la recherche de co-financements (alléger les 484 €/élève)",0,0,["admin","eps"],true,"À démarrer dès septembre, pas en janvier."),
+    t("ski","Réserver chalets (Belledonne + Alpages), train et pré-réserver l'ESF",0,1,["eps","ext"],true),
+    t("ski","Budget prévisionnel + autorisation de sortie (CA)",1,1,["admin","eps"]),
+    t("ski","Information aux familles + recueil des intentions / acomptes",2,2,["eps","admin"]),
+    t("ski","Questionnaire auto-éval ESF + constitution des groupes de niveau",3,4,["eps"]),
+    t("ski","Collecte des paiements échelonnés + vérif PAI / assurances / régimes",4,5,["eps","admin"]),
+    t("ski","MAJ appli Cohésion Montagne + planning + chambres / équipes",5,5,["eps"]),
+    t("ski","Réunion parents pré-départ + check matériel + confirmation transport",6,6,["eps"]),
+    t("ski","SÉJOUR — Chamrousse (≈ 30/03 → 03/04)",6,6,["eps"],false,"Date 2025-26 reprise comme matrice — à confirmer."),
+    t("ski","Bilan à chaud + restitution carnet de bord (expo / affichage)",7,7,["eps"]),
+    // EPS SANTÉ
+    t("sante","Réviser le protocole (retirer les tests lourds) + harmoniser la passation entre les 2 profs",0,0,["eps"],true,"À faire avant le déploiement de septembre."),
+    t("sante","Lancer le « Bilan Parents » via l'ENT (sans dimension évaluative)",0,0,["eps","admin"]),
+    t("sante","Campagne de tests — Trimestre 1 + saisie",0,3,["eps"]),
+    t("sante","Partage des tendances par niveau en conseil pédagogique",4,4,["eps","admin"]),
+    t("sante","Campagne de tests — Trimestre 2",4,6,["eps"]),
+    t("sante","Campagne de tests — Trimestre 3 + activation « Évolution 4 ans »",7,9,["eps"]),
+    t("sante","Bilan annuel condition physique",9,9,["eps"]),
+    // AS
+    t("as","Affiliation UNSS + ouverture HelloAsso + unifier le circuit (inclure Pass+ 92)",0,0,["eps"],true),
+    t("as","Mettre en place les nouveaux créneaux (Futsal / Multi+CT compét. / CT loisir)",0,0,["eps"]),
+    t("as","Communication ciblée mixité (filles → Circuit Training)",0,1,["eps"]),
+    t("as","Régulariser les inscriptions HelloAsso oubliées + bilan AS",9,9,["eps"]),
+    // COMPÉTITIONS
+    t("compet","Cross départemental 92 (promo AS + licences journée)",1,1,["eps","ext"]),
+    t("compet","Futsal district — tours successifs",1,8,["eps","ext"]),
+    t("compet","Formation / consolidation des Jeunes Officiels",0,10,["eps"]),
+    t("compet","Championnat d'académie — Circuit Training",5,5,["eps","ext"]),
+    t("compet","Tours Futsal Benjamins (objectif niveau académique)",7,8,["eps","ext"]),
+    // PSC1
+    t("psc1","Demander la dotation HSE (≥ 20h) — AVANT la DGH / répartition",2,3,["admin","eps"],true,"Le nerf de la guerre : 38h faites pour 9h payées cette année."),
+    t("psc1","Décider du format (hybride Éléa vs 100 % présentiel)",4,4,["eps"]),
+    t("psc1","Préparer Éléa + diaporamas + matériel + planifier ~7 sessions (3 classes, ~76 él.)",6,6,["eps"]),
+    t("psc1","Mise en ligne du parcours Éléa + relances familles",7,7,["eps"]),
+    t("psc1","Sessions PSC1 (~7)",8,9,["eps"]),
+    t("psc1","Saisie des résultats + nettoyage / rangement du matériel",9,9,["eps"]),
+    // PODOMÈTRE
+    t("podo","Co-construire le planning avec Mme Dussaut (SVT) — caler les périodes",0,1,["eps","disc"],true),
+    t("podo","Décision matériel + dossiers de financement (Fonds d'innovation via chef d'étab., mairie, AS)",1,2,["eps","admin"],true,"Délai de commande des podomètres connectés à anticiper."),
+    t("podo","Commander le matériel + protocole de prêt (fiche signée, numérotation, registre)",3,4,["eps"]),
+    t("podo","Désigner 2 élèves ambassadeurs / classe (collecte + saisie) + préparer l'affichage",6,6,["eps","ambass"]),
+    t("podo","Déroulé du projet (2 périodes par classe)",7,8,["eps","disc","ambass"]),
+    t("podo","Questionnaire d'évaluation anonyme + bilan",9,9,["eps"]),
+    // PLEIN AIR
+    t("pleinair","Caler les dates avec le Département (Ruffio CO / Aubry Biathlon) + réserver les journées banalisées",0,1,["eps","admin","ext"],true),
+    t("pleinair","Biathlon 3e — Cycle 1 (7 séances)",1,3,["eps"]),
+    t("pleinair","Biathlon 3e — Cycle 2 (7 séances)",3,5,["eps"]),
+    t("pleinair","Biathlon 3e — Cycle 3 (7 séances)",5,7,["eps"]),
+    t("pleinair","Matinée banalisée Biathlon (challenge format JO)",5,5,["eps","ext"]),
+    t("pleinair","Journée AZIMUT — CO 4e (journée banalisée)",6,6,["eps","ext"],false,"Date à fixer avec le Département."),
+    t("pleinair","Cycle CO 6e — Haras de Jardy (~6 séances)",7,9,["eps","ext"]),
+    t("pleinair","Trophée Aventure — ÉTENDRE aux 2 classes de 4e (inscription Département)",8,9,["eps","ext"],false,"Extension par rapport à 2025-26 (4A seule)."),
+    t("pleinair","Bilan Plein Air",9,9,["eps"]),
+    // CONCERTATIONS
+    t("concert","Réunion de pré-rentrée EPS — harmoniser les protocoles + répartir les projets",0,0,["eps"]),
+    t("concert","Concertation EPS + SVT — cadrage du projet Podomètre",0,1,["eps","disc"]),
+    t("concert","Conseil pédagogique — partage des tendances EPS Santé",4,4,["eps","admin"]),
+    t("concert","Point d'étape mensuel entre profs EPS",0,10,["eps"]),
+    t("concert","Concertation Tournoi Recyclerie (Sc. Physiques + éco-délégués)",2,2,["eps","disc"],false,"Projet à confirmer."),
+    // AUTRE
+    t("autre","Tournoi Recyclerie — avec prof. Sc. Physiques + éco-délégués",3,3,["eps","disc"],false,"Projet possible — date à définir.")
+  ];
+  return {projects:P, actors:A, tasks:T};
+}
+
+/* ============ État & stockage ============ */
+let state = null;
+let view = "timeline";
+let filterProj = new Set();   // empty = tous
+let filterActor = new Set();
+let editing = null;
+
+const hasStore = (typeof window!=="undefined" && window.storage && typeof window.storage.get==="function");
+
+async function load(){
+  if(hasStore){
+    try{ const r = await window.storage.get(STORAGE_KEY); if(r && r.value){ state = JSON.parse(r.value); return; } }catch(e){}
+  }
+  state = defaultData();
+  await save();
+}
+async function save(){
+  if(!hasStore) return;
+  try{ await window.storage.set(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+}
+
+/* ============ Utilitaires ============ */
+const proj = id => state.projects.find(p=>p.id===id) || {name:"?",c:"#999"};
+const actor = id => state.actors.find(a=>a.id===id) || {name:"?",c:"#999"};
+function whenLabel(s,e){ if(e>s) return MONTHS[s]+" "+MYEAR[s].slice(2)+" → "+MONTHS[e]+" "+MYEAR[e].slice(2); return MONTHS[s]+" "+MYEAR[s]; }
+function esc(s){ return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
+
+function todayFrac(){
+  const now = new Date();
+  const start = new Date(2026,8,1), end = new Date(2027,6,31);
+  if(now < start) return 0;
+  if(now > end) return 11;
+  const mi = (now.getFullYear()-2026)*12 + (now.getMonth()-8);
+  const dim = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+  return Math.max(0, Math.min(11, mi + (now.getDate()-1)/dim));
+}
+function statusOf(tk){
+  if(tk.done) return "done";
+  const f = todayFrac();
+  if(f===0) return "upcoming";
+  if(tk.e+1 <= f) return "late";
+  if(tk.s <= f && f < tk.e+1) return "now";
+  return "upcoming";
+}
+
+/* ============ Filtres ============ */
+function passes(tk){
+  if(filterProj.size && !filterProj.has(tk.p)) return false;
+  if(filterActor.size && !tk.act.some(a=>filterActor.has(a))) return false;
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  if(q && !(tk.title.toLowerCase().includes(q) || (tk.note||"").toLowerCase().includes(q))) return false;
+  return true;
+}
+
+/* ============ Rendu : entête ============ */
+function renderHeader(){
+  const now = new Date();
+  const fmt = now.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  document.getElementById("todayDate").textContent = "Aujourd'hui — "+fmt;
+  const f = todayFrac();
+  document.getElementById("todayNote").textContent = (f===0)
+    ? "Année 2026-2027 à venir · démarrage en septembre"
+    : "Repère « aujourd'hui » : "+MONTHS[Math.floor(f)]+" "+MYEAR[Math.floor(f)];
+  const tot = state.tasks.length, done = state.tasks.filter(t=>t.done).length;
+  const pct = tot? Math.round(done/tot*100):0;
+  document.getElementById("progFill").style.width = pct+"%";
+  document.getElementById("progLab").textContent = done+" / "+tot+" tâches faites · "+pct+"%";
+  document.documentElement.style.setProperty("--todayfrac", (f/11).toFixed(4));
+}
+
+/* ============ Rendu : filtres & légende ============ */
+function renderFilters(){
+  const pf = document.getElementById("projFilter"); pf.innerHTML="";
+  state.projects.forEach(p=>{
+    const on = filterProj.has(p.id);
+    const el = document.createElement("div");
+    el.className = "chip"+(on?" on":""); el.style.setProperty("--c",p.c);
+    el.innerHTML = `<span class="dot"></span>${esc(p.name)}`;
+    el.onclick = ()=>{ on?filterProj.delete(p.id):filterProj.add(p.id); render(); };
+    pf.appendChild(el);
+  });
+  const af = document.getElementById("actorFilter"); af.innerHTML="";
+  state.actors.forEach(a=>{
+    const on = filterActor.has(a.id);
+    const el = document.createElement("div");
+    el.className = "chip"+(on?" on":""); el.style.setProperty("--c",a.c);
+    el.innerHTML = `<span class="dot"></span>${esc(a.name)}`;
+    el.onclick = ()=>{ on?filterActor.delete(a.id):filterActor.add(a.id); render(); };
+    af.appendChild(el);
+  });
+  const lg = document.getElementById("legend"); lg.innerHTML="";
+  state.projects.forEach(p=>{
+    const li = document.createElement("span"); li.className="li";
+    li.innerHTML = `<i style="background:${p.c}"></i>${esc(p.name)}`; lg.appendChild(li);
+  });
+  const crit = document.createElement("span"); crit.className="li";
+  crit.innerHTML = `<i style="background:repeating-linear-gradient(45deg,#999,#999 4px,#555 4px,#555 8px)"></i>hachuré = échéance critique`;
+  lg.appendChild(crit);
+}
+
+/* ============ Rendu : timeline ============ */
+function renderTimeline(){
+  const inner = document.getElementById("tlInner"); inner.innerHTML="";
+  // header
+  const head = document.createElement("div"); head.className="tl-head";
+  let mh = `<div class="corner">Projet / tâche</div><div class="months">`;
+  for(let i=0;i<11;i++) mh += `<div class="mcell">${MONTHS[i]}<small>${MYEAR[i]}</small></div>`;
+  mh += `</div>`; head.innerHTML = mh; inner.appendChild(head);
+
+  const body = document.createElement("div"); body.className="tl-body";
+  let any=false;
+  state.projects.forEach(p=>{
+    const tasks = state.tasks.filter(t=>t.p===p.id && passes(t)).sort((a,b)=>a.s-b.s);
+    if(!tasks.length) return; any=true;
+    const lh = document.createElement("div"); lh.className="lane-head"; lh.style.setProperty("--c",p.c);
+    const done = tasks.filter(t=>t.done).length;
+    lh.innerHTML = `<span class="pdot"></span><span class="pname">${esc(p.name)}</span><span class="pcount">${done}/${tasks.length}</span>`;
+    body.appendChild(lh);
+    tasks.forEach(tk=>{
+      const row = document.createElement("div"); row.className="lane-row"+(tk.done?" done":""); row.style.setProperty("--c",p.c);
+      const cs = tk.s+1, ce = tk.e+2;
+      row.innerHTML =
+        `<div class="label"><input type="checkbox" class="ck" ${tk.done?"checked":""} data-id="${tk.id}">
+           <span class="tt" data-edit="${tk.id}">${esc(tk.title)}${tk.crit?' <span class="crit-flag">CRIT</span>':''}</span></div>
+         <div class="track"><div class="bar ${tk.crit?'crit':''}" style="--cs:${cs};--ce:${ce}" data-edit="${tk.id}"><span class="blab">${esc(whenLabel(tk.s,tk.e))}</span></div></div>`;
+      body.appendChild(row);
+    });
+  });
+  if(!any) body.innerHTML = `<div class="empty">Aucune tâche ne correspond aux filtres.</div>`;
+  const line = document.createElement("div"); line.className="today-line";
+  line.innerHTML = `<span class="pin">auj.</span>`;
+  body.appendChild(line);
+  inner.appendChild(body);
+  wireChecks(inner); wireEdits(inner);
+}
+
+/* ============ Rendu : liste ============ */
+function renderList(){
+  const wrap = document.getElementById("listWrap"); wrap.innerHTML="";
+  let any=false;
+  state.projects.forEach(p=>{
+    const tasks = state.tasks.filter(t=>t.p===p.id && passes(t)).sort((a,b)=>a.s-b.s || (b.crit-a.crit));
+    if(!tasks.length) return; any=true;
+    const done = tasks.filter(t=>t.done).length, pct = Math.round(done/tasks.length*100);
+    const box = document.createElement("div"); box.className="list-proj"; box.style.setProperty("--c",p.c);
+    let h = `<div class="lh"><span class="pdot"></span><h3>${esc(p.name)}</h3>
+      <span class="mini"><span class="bar"><i style="width:${pct}%"></i></span><span>${done}/${tasks.length}</span></span></div>`;
+    tasks.forEach(tk=>{
+      const st = statusOf(tk);
+      const whenCls = st==="late"?"late":(st==="now"?"now":"");
+      const tags = tk.act.map(a=>{const A=actor(a);return `<span class="atag" style="--ac:${A.c}"><span class="d"></span>${esc(A.name)}</span>`;}).join("");
+      h += `<div class="titem ${tk.done?"done":""}">
+        <input type="checkbox" class="ck" ${tk.done?"checked":""} data-id="${tk.id}">
+        <div class="mid">
+          <span class="tt" data-edit="${tk.id}">${esc(tk.title)}${tk.crit?' <span class="crit-flag">CRITIQUE</span>':''}</span>
+          <div class="meta"><span class="when ${whenCls}">${esc(whenLabel(tk.s,tk.e))}</span>${tags}</div>
+          ${tk.note?`<div class="tnote">${esc(tk.note)}</div>`:""}
+        </div>
+        <button class="edit no-print" data-edit="${tk.id}">✎</button>
+      </div>`;
+    });
+    box.innerHTML = h; wrap.appendChild(box);
+  });
+  if(!any) wrap.innerHTML = `<div class="empty">Aucune tâche ne correspond aux filtres.</div>`;
+  wireChecks(wrap); wireEdits(wrap);
+}
+
+function wireChecks(root){
+  root.querySelectorAll(".ck[data-id]").forEach(c=>{
+    c.onchange = async ()=>{ const tk = state.tasks.find(t=>t.id===c.dataset.id); if(tk){ tk.done=c.checked; await save(); render(); } };
+  });
+}
+function wireEdits(root){
+  root.querySelectorAll("[data-edit]").forEach(el=>{ el.style.cursor="pointer"; el.onclick=()=>openTask(el.dataset.edit); });
+}
+
+/* ============ Vue ============ */
+function setView(v){
+  view=v;
+  document.getElementById("view-timeline").classList.toggle("on",v==="timeline");
+  document.getElementById("view-list").classList.toggle("on",v==="list");
+  document.getElementById("vTimeline").classList.toggle("on",v==="timeline");
+  document.getElementById("vList").classList.toggle("on",v==="list");
+}
+function render(){ renderHeader(); renderFilters(); renderTimeline(); renderList(); }
+
+/* ============ Modale tâche ============ */
+function fillSelects(){
+  const ps = document.getElementById("fProject"); ps.innerHTML = state.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
+  const opt = i=>`<option value="${i}">${MONTHS[i]} ${MYEAR[i]}</option>`;
+  document.getElementById("fStart").innerHTML = MONTHS.map((m,i)=>opt(i)).join("");
+  document.getElementById("fEnd").innerHTML   = MONTHS.map((m,i)=>opt(i)).join("");
+  const fa = document.getElementById("fActors"); fa.innerHTML="";
+  state.actors.forEach(a=>{
+    const lab=document.createElement("label"); lab.innerHTML=`<input type="checkbox" value="${a.id}"><span style="width:8px;height:8px;border-radius:50%;background:${a.c};display:inline-block"></span>${esc(a.name)}`;
+    const cb=lab.querySelector("input"); cb.onchange=()=>lab.classList.toggle("on",cb.checked);
+    fa.appendChild(lab);
+  });
+}
+function openTask(id){
+  fillSelects();
+  editing = id||null;
+  const tk = id? state.tasks.find(t=>t.id===id):null;
+  document.getElementById("taskTitle").textContent = tk? "Modifier la tâche":"Nouvelle tâche";
+  document.getElementById("fTitle").value = tk?tk.title:"";
+  document.getElementById("fProject").value = tk?tk.p:state.projects[0].id;
+  document.getElementById("fStart").value = tk?tk.s:0;
+  document.getElementById("fEnd").value = tk?tk.e:0;
+  document.getElementById("fNote").value = tk?tk.note:"";
+  document.getElementById("fCrit").checked = tk?tk.crit:false;
+  document.querySelectorAll("#fActors label").forEach(l=>{ const cb=l.querySelector("input"); cb.checked = tk?tk.act.includes(cb.value):false; l.classList.toggle("on",cb.checked); });
+  document.getElementById("delTaskBtn").style.display = tk?"inline-flex":"none";
+  openOv("ovTask");
+}
+async function saveTask(){
+  const title=document.getElementById("fTitle").value.trim(); if(!title){ document.getElementById("fTitle").focus(); return; }
+  let s=+document.getElementById("fStart").value, e=+document.getElementById("fEnd").value; if(e<s) e=s;
+  const act=[...document.querySelectorAll("#fActors input:checked")].map(i=>i.value);
+  const data={title, p:document.getElementById("fProject").value, s, e, act, crit:document.getElementById("fCrit").checked, note:document.getElementById("fNote").value.trim()};
+  if(editing){ Object.assign(state.tasks.find(t=>t.id===editing), data); }
+  else { data.id="t"+Date.now()+Math.random().toString(36).slice(2,5); data.done=false; state.tasks.push(data); }
+  await save(); closeOv("ovTask"); render();
+}
+async function deleteTask(){
+  if(editing && confirm("Supprimer cette tâche ?")){ state.tasks=state.tasks.filter(t=>t.id!==editing); await save(); closeOv("ovTask"); render(); }
+}
+
+/* ============ Projet / Acteur ============ */
+function openProject(){ document.getElementById("pName").value=""; openOv("ovProject"); }
+async function saveProject(){
+  const name=document.getElementById("pName").value.trim(); if(!name) return;
+  state.projects.push({id:"p"+Date.now().toString(36), name, c:document.getElementById("pColor").value});
+  await save(); closeOv("ovProject"); render();
+}
+function openActor(){ document.getElementById("aName").value=""; openOv("ovActor"); }
+async function saveActor(){
+  const name=document.getElementById("aName").value.trim(); if(!name) return;
+  state.actors.push({id:"a"+Date.now().toString(36), name, c:document.getElementById("aColor").value});
+  await save(); closeOv("ovActor"); render();
+}
+async function resetAll(){
+  if(confirm("Restaurer le modèle d'origine ? Cela efface vos ajouts et l'avancement coché.")){ state=defaultData(); await save(); render(); }
+}
+
+/* ============ Overlay helpers ============ */
+function openOv(id){ document.getElementById(id).classList.add("on"); }
+function closeOv(id){ document.getElementById(id).classList.remove("on"); }
+document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{ if(e.target===o) o.classList.remove("on"); }));
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySelectorAll(".ov.on").forEach(o=>o.classList.remove("on")); });
+
+/* ============ Init ============ */
+(async function(){ await load(); render(); })();
+</script>
+</body>
+</html>
