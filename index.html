@@ -20,10 +20,10 @@
   *{box-sizing:border-box}
   html,body{margin:0}
   body{font-family:var(--body); background:var(--bg); color:var(--ink); font-size:14px; line-height:1.45; -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1240px; margin:0 auto; padding:22px 20px 80px; display:none;}
+  .wrap.on{display:block;}
   h1,h2,h3{font-family:var(--disp); margin:0; font-weight:600; letter-spacing:-.01em;}
-  .wrap{max-width:1240px; margin:0 auto; padding:22px 20px 80px;}
 
-  /* ---- Header ---- */
   header.top{display:flex; align-items:flex-end; justify-content:space-between; gap:20px; flex-wrap:wrap; padding-bottom:16px; border-bottom:1px solid var(--line);}
   .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--faint);}
   header.top h1{font-size:25px; margin-top:4px;}
@@ -36,7 +36,13 @@
   .prog .bar > i{display:block; height:100%; background:var(--ink); border-radius:99px; transition:width .4s;}
   .prog .lab{font-size:12px; color:var(--muted); margin-top:4px;}
 
-  /* ---- Toolbar ---- */
+  .statusbar{display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:12px;}
+  .pill{display:inline-flex; align-items:center; gap:7px; font-size:12px; padding:5px 11px; border-radius:99px; border:1px solid var(--line); background:#fff; color:var(--muted);}
+  .pill .d{width:8px; height:8px; border-radius:50%;}
+  .pill.sync .d{background:#10B981;} .pill.local .d{background:#F59E0B;}
+  .pill b{color:var(--ink); font-weight:600;}
+  .linkbtn{border:0; background:transparent; color:#2563EB; font:inherit; cursor:pointer; font-size:12px; text-decoration:underline; padding:0;}
+
   .toolbar{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:18px 0 6px;}
   .seg{display:inline-flex; background:var(--surface); border:1px solid var(--line); border-radius:99px; padding:3px;}
   .seg button{border:0; background:transparent; font:inherit; font-weight:600; color:var(--muted); padding:6px 16px; border-radius:99px; cursor:pointer;}
@@ -48,7 +54,6 @@
   .spacer{flex:1;}
   .search{border:1px solid var(--line); border-radius:99px; background:var(--surface); padding:8px 14px; font:inherit; min-width:180px;}
 
-  /* ---- Filters ---- */
   .filters{display:flex; gap:18px; flex-wrap:wrap; margin:14px 0 18px; padding:14px 16px; background:var(--surface); border:1px solid var(--line); border-radius:var(--r);}
   .fgroup{display:flex; flex-direction:column; gap:8px;}
   .fgroup .ttl{font-family:var(--mono); font-size:10.5px; letter-spacing:.12em; text-transform:uppercase; color:var(--faint);}
@@ -57,7 +62,6 @@
   .chip .dot{width:9px; height:9px; border-radius:50%; background:var(--c,#ccc);}
   .chip.on{color:var(--ink); border-color:var(--c,#bbb); background:color-mix(in srgb, var(--c,#000) 8%, #fff);}
 
-  /* ---- Timeline ---- */
   .panel{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); overflow:hidden;}
   .tl{position:relative; overflow-x:auto;}
   .tl-inner{min-width:840px;}
@@ -89,7 +93,6 @@
   .today-line .pin{position:absolute; top:-1px; left:-17px; background:var(--today); color:#fff; font-family:var(--mono); font-size:9px; padding:2px 5px; border-radius:4px; white-space:nowrap;}
   .crit-flag{font-family:var(--mono); font-size:9px; font-weight:700; color:#B91C1C; border:1px solid #F3C9C9; background:#FEF2F2; padding:1px 4px; border-radius:4px; letter-spacing:.04em;}
 
-  /* ---- List ---- */
   .list-proj{margin-bottom:16px; border:1px solid var(--line); border-radius:var(--r); overflow:hidden; background:var(--surface);}
   .list-proj > .lh{display:flex; align-items:center; gap:10px; padding:11px 16px; background:color-mix(in srgb, var(--c) 8%, #fff); border-bottom:1px solid var(--line2);}
   .list-proj > .lh .pdot{width:11px; height:11px; border-radius:3px; background:var(--c);}
@@ -113,22 +116,20 @@
   .titem .edit{border:0; background:transparent; color:var(--faint); cursor:pointer; font-size:16px; padding:2px 6px; border-radius:6px;}
   .titem .edit:hover{background:var(--line2); color:var(--ink);}
 
-  .view{display:none;}
-  .view.on{display:block;}
+  .view{display:none;} .view.on{display:block;}
 
-  /* ---- Modal ---- */
   .ov{position:fixed; inset:0; background:rgba(16,24,38,.42); display:none; align-items:center; justify-content:center; z-index:50; padding:18px;}
   .ov.on{display:flex;}
   .modal{background:#fff; border-radius:14px; width:100%; max-width:520px; max-height:92vh; overflow:auto; box-shadow:0 20px 60px rgba(0,0,0,.25);}
   .modal h2{font-size:18px; padding:18px 22px 0;}
   .mbody{padding:14px 22px 4px; display:flex; flex-direction:column; gap:13px;}
-  .field label{display:block; font-size:11.5px; font-weight:600; color:var(--muted); margin-bottom:5px; text-transform:uppercase; letter-spacing:.04em; font-family:var(--mono); font-weight:400; font-size:10.5px; letter-spacing:.1em;}
+  .field label{display:block; font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--faint); margin-bottom:5px;}
   .field input[type=text], .field textarea, .field select{width:100%; border:1px solid var(--line); border-radius:9px; padding:9px 11px; font:inherit; background:#fff;}
   .field textarea{resize:vertical; min-height:54px;}
   .row2{display:flex; gap:12px;} .row2 > *{flex:1;}
   .ckline{display:flex; gap:8px; align-items:center;}
   .checkgrid{display:flex; gap:8px; flex-wrap:wrap;}
-  .checkgrid label{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:99px; padding:5px 11px; cursor:pointer; font-size:12.5px; text-transform:none; letter-spacing:0; color:var(--ink); font-family:var(--body);}
+  .checkgrid label{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:99px; padding:5px 11px; cursor:pointer; font-size:12.5px; color:var(--ink); font-family:var(--body); text-transform:none; letter-spacing:0;}
   .checkgrid label.on{background:var(--ink); color:#fff; border-color:var(--ink);}
   .checkgrid input{display:none;}
   .mfoot{display:flex; gap:10px; padding:16px 22px 20px; border-top:1px solid var(--line2); margin-top:8px;}
@@ -137,13 +138,23 @@
   .legend .li{display:inline-flex; align-items:center; gap:6px;} .legend .li i{width:10px; height:10px; border-radius:3px; display:inline-block;}
   .empty{padding:40px; text-align:center; color:var(--faint);}
 
+  /* Gate (login / chargement / refus) */
+  .gate{position:fixed; inset:0; background:var(--bg); display:none; align-items:center; justify-content:center; z-index:80; padding:24px;}
+  .gate.on{display:flex;}
+  .gatecard{background:#fff; border:1px solid var(--line); border-radius:18px; max-width:430px; width:100%; padding:34px 30px; text-align:center; box-shadow:0 18px 55px rgba(0,0,0,.09);}
+  .gatecard .eyebrow{margin-bottom:10px;}
+  .gatecard h2{font-size:21px; margin-bottom:8px;}
+  .gatecard p{color:var(--muted); font-size:13.5px; margin:0 0 20px;}
+  .gbtn{display:inline-flex; align-items:center; gap:10px; border:1px solid var(--line); background:#fff; color:var(--ink); font:inherit; font-weight:600; padding:11px 20px; border-radius:11px; cursor:pointer; font-size:14px;}
+  .gbtn:hover{border-color:#bcc4cd; box-shadow:0 2px 8px rgba(0,0,0,.05);}
+  .gbtn .g{width:18px;height:18px;display:inline-block;}
+  .gemail{font-family:var(--mono); font-size:12px; color:var(--ink); background:var(--line2); padding:3px 8px; border-radius:6px;}
+
   @media (max-width:640px){
     :root{--label-w:150px;}
     header.top h1{font-size:21px;}
     .nowbox{text-align:left; min-width:0;} .prog .bar{margin-left:0;}
   }
-
-  /* ---- Print ---- */
   @media print{
     @page{size:A4 landscape; margin:10mm;}
     body{background:#fff; font-size:10px;}
@@ -153,20 +164,42 @@
     .tl{overflow:visible;} .tl-inner{min-width:0; width:100%;}
     .panel,.list-proj{break-inside:avoid; box-shadow:none;}
     .view#view-list{margin-top:14px; break-before:page;}
-    .bar .blab{font-size:8px;}
-    .today-line{border-color:#888;}
+    .bar .blab{font-size:8px;} .today-line{border-color:#888;}
     header.top{border-color:#000;}
   }
 </style>
 </head>
 <body>
-<div class="wrap">
 
+<!-- ===================================================================== -->
+<!--  >>>>>  À COMPLÉTER : config Firebase (depuis console.firebase.google.com)  -->
+<!-- ===================================================================== -->
+<script>
+const FIREBASE_CONFIG = {
+  apiKey:            "AIzaSyDy4_P6nENjmRKE8luD7mFfu830UD1g6p8",
+  authDomain:        "planning-ydm.firebaseapp.com",
+  databaseURL:       "https://planning-ydm-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:         "planning-ydm",
+  storageBucket:     "planning-ydm.firebasestorage.app",
+  messagingSenderId: "749902843285",
+  appId:             "1:749902843285:web:a944a6fac9c9bdaefeba9c"
+};
+// Comptes autorisés à voir / modifier (en minuscules) :
+const ALLOW = ["florianeude@gmail.com", "cosperecemeric@gmail.com"];
+// Version du SDK Firebase (modifiable si besoin) :
+const FB_VERSION = "10.12.2";
+</script>
+<!-- ===================================================================== -->
+
+<div class="gate on" id="gate"><div class="gatecard"><div class="eyebrow">Chargement…</div></div></div>
+
+<div class="wrap" id="app">
   <header class="top">
     <div>
       <div class="eyebrow">Collège Yves du Manoir · Vaucresson — EPS</div>
       <h1>Pilotage des projets — Année 2026-2027</h1>
       <div class="sub">Rétro-planning d'équipe · F. Eude &amp; E. Cosperec · qui fait quoi, et quand</div>
+      <div class="statusbar no-print" id="statusbar"></div>
     </div>
     <div class="nowbox">
       <div class="date" id="todayDate">—</div>
@@ -190,96 +223,76 @@
   </div>
 
   <div class="filters no-print">
-    <div class="fgroup">
-      <span class="ttl">Projets</span>
-      <div class="chips" id="projFilter"></div>
-    </div>
-    <div class="fgroup">
-      <span class="ttl">Acteurs</span>
-      <div class="chips" id="actorFilter"></div>
-    </div>
+    <div class="fgroup"><span class="ttl">Projets</span><div class="chips" id="projFilter"></div></div>
+    <div class="fgroup"><span class="ttl">Acteurs</span><div class="chips" id="actorFilter"></div></div>
   </div>
 
-  <!-- TIMELINE -->
   <div class="view on" id="view-timeline">
-    <div class="panel">
-      <div class="tl"><div class="tl-inner" id="tlInner"></div></div>
-      <div class="legend" id="legend"></div>
-    </div>
+    <div class="panel"><div class="tl"><div class="tl-inner" id="tlInner"></div></div><div class="legend" id="legend"></div></div>
   </div>
-
-  <!-- LIST -->
-  <div class="view" id="view-list">
-    <div id="listWrap"></div>
-  </div>
-
+  <div class="view" id="view-list"><div id="listWrap"></div></div>
 </div>
 
-<!-- Task modal -->
-<div class="ov" id="ovTask">
-  <div class="modal">
-    <h2 id="taskTitle">Nouvelle tâche</h2>
-    <div class="mbody">
-      <div class="field"><label>Intitulé</label><input type="text" id="fTitle" placeholder="Ex : Réserver les chalets et le train"></div>
-      <div class="field"><label>Projet</label><select id="fProject"></select></div>
-      <div class="row2">
-        <div class="field"><label>Mois de début</label><select id="fStart"></select></div>
-        <div class="field"><label>Mois de fin</label><select id="fEnd"></select></div>
-      </div>
-      <div class="field"><label>Acteurs concernés</label><div class="checkgrid" id="fActors"></div></div>
-      <div class="field"><label>Note (optionnel)</label><textarea id="fNote" placeholder="Précision, contact, lien…"></textarea></div>
-      <div class="ckline"><input type="checkbox" id="fCrit" class="ck"><label for="fCrit" style="margin:0; font-family:var(--body); text-transform:none; letter-spacing:0; font-size:13px; color:var(--ink); font-weight:500;">Échéance critique (à ne pas rater / longue anticipation)</label></div>
+<!-- Modale tâche -->
+<div class="ov" id="ovTask"><div class="modal">
+  <h2 id="taskTitle">Nouvelle tâche</h2>
+  <div class="mbody">
+    <div class="field"><label>Intitulé</label><input type="text" id="fTitle" placeholder="Ex : Réserver les chalets et le train"></div>
+    <div class="field"><label>Projet</label><select id="fProject"></select></div>
+    <div class="row2">
+      <div class="field"><label>Mois de début</label><select id="fStart"></select></div>
+      <div class="field"><label>Mois de fin</label><select id="fEnd"></select></div>
     </div>
-    <div class="mfoot">
-      <button class="btn primary" onclick="saveTask()">Enregistrer</button>
-      <button class="btn" onclick="closeOv('ovTask')">Annuler</button>
-      <span class="spacer"></span>
-      <button class="btn del" id="delTaskBtn" style="display:none" onclick="deleteTask()">Supprimer</button>
-    </div>
+    <div class="field"><label>Acteurs concernés</label><div class="checkgrid" id="fActors"></div></div>
+    <div class="field"><label>Note (optionnel)</label><textarea id="fNote" placeholder="Précision, contact, lien…"></textarea></div>
+    <div class="ckline"><input type="checkbox" id="fCrit" class="ck"><label for="fCrit" style="font-family:var(--body);text-transform:none;letter-spacing:0;font-size:13px;color:var(--ink);font-weight:500;margin:0;">Échéance critique (à ne pas rater / longue anticipation)</label></div>
   </div>
-</div>
+  <div class="mfoot">
+    <button class="btn primary" onclick="saveTask()">Enregistrer</button>
+    <button class="btn" onclick="closeOv('ovTask')">Annuler</button>
+    <span class="spacer"></span>
+    <button class="btn del" id="delTaskBtn" style="display:none" onclick="deleteTask()">Supprimer</button>
+  </div>
+</div></div>
 
-<!-- Project modal -->
-<div class="ov" id="ovProject">
-  <div class="modal" style="max-width:420px">
-    <h2>Nouveau projet</h2>
-    <div class="mbody">
-      <div class="field"><label>Nom du projet</label><input type="text" id="pName" placeholder="Ex : Tournoi Recyclerie"></div>
-      <div class="field"><label>Couleur</label><input type="color" id="pColor" value="#0EA5A4" style="width:60px; height:38px; padding:3px; border:1px solid var(--line); border-radius:9px;"></div>
-    </div>
-    <div class="mfoot"><button class="btn primary" onclick="saveProject()">Créer</button><button class="btn" onclick="closeOv('ovProject')">Annuler</button></div>
+<!-- Modale projet -->
+<div class="ov" id="ovProject"><div class="modal" style="max-width:420px">
+  <h2>Nouveau projet</h2>
+  <div class="mbody">
+    <div class="field"><label>Nom du projet</label><input type="text" id="pName" placeholder="Ex : Tournoi Recyclerie"></div>
+    <div class="field"><label>Couleur</label><input type="color" id="pColor" value="#0EA5A4" style="width:60px;height:38px;padding:3px;border:1px solid var(--line);border-radius:9px;"></div>
   </div>
-</div>
+  <div class="mfoot"><button class="btn primary" onclick="saveProject()">Créer</button><button class="btn" onclick="closeOv('ovProject')">Annuler</button></div>
+</div></div>
 
-<!-- Actor modal -->
-<div class="ov" id="ovActor">
-  <div class="modal" style="max-width:420px">
-    <h2>Nouvel acteur</h2>
-    <div class="mbody">
-      <div class="field"><label>Nom de l'acteur</label><input type="text" id="aName" placeholder="Ex : Prof. Sciences Physiques"></div>
-      <div class="field"><label>Couleur (repère)</label><input type="color" id="aColor" value="#64748B" style="width:60px; height:38px; padding:3px; border:1px solid var(--line); border-radius:9px;"></div>
-    </div>
-    <div class="mfoot"><button class="btn primary" onclick="saveActor()">Créer</button><button class="btn" onclick="closeOv('ovActor')">Annuler</button></div>
+<!-- Modale acteur -->
+<div class="ov" id="ovActor"><div class="modal" style="max-width:420px">
+  <h2>Nouvel acteur</h2>
+  <div class="mbody">
+    <div class="field"><label>Nom de l'acteur</label><input type="text" id="aName" placeholder="Ex : Prof. Sciences Physiques"></div>
+    <div class="field"><label>Couleur (repère)</label><input type="color" id="aColor" value="#64748B" style="width:60px;height:38px;padding:3px;border:1px solid var(--line);border-radius:9px;"></div>
   </div>
-</div>
+  <div class="mfoot"><button class="btn primary" onclick="saveActor()">Créer</button><button class="btn" onclick="closeOv('ovActor')">Annuler</button></div>
+</div></div>
 
 <script>
-/* ============ Données ============ */
+/* ============ Constantes ============ */
 const MONTHS = ["Sept.","Oct.","Nov.","Déc.","Janv.","Févr.","Mars","Avr.","Mai","Juin","Juil."];
 const MYEAR  = ["2026","2026","2026","2026","2027","2027","2027","2027","2027","2027","2027"];
-const STORAGE_KEY = "pilotage_eps_ydm_2026_2027_v1";
+const LS_KEY = "pilotage_eps_ydm_2026_2027_v1";
 
+/* ============ Données par défaut ============ */
 function defaultData(){
   const P = [
-    {id:"ski",   name:"Séjour Ski Cohésion (6e)",        c:"#2563EB"},
-    {id:"sante", name:"EPS Santé — Condition physique",  c:"#059669"},
-    {id:"as",    name:"AS / UNSS — fonctionnement",      c:"#EA580C"},
-    {id:"compet",name:"Compétitions UNSS / AS",          c:"#DB2777"},
-    {id:"psc1",  name:"PSC1 — Secourisme (5e)",          c:"#DC2626"},
-    {id:"podo",  name:"Podomètre × SVT (5e)",            c:"#7C3AED"},
-    {id:"pleinair",name:"Plein Air Hauts-de-Seine",      c:"#0891B2"},
-    {id:"concert", name:"Concertations / Réunions",      c:"#475569"},
-    {id:"autre", name:"Autres projets",                  c:"#CA8A04"}
+    {id:"ski",     name:"Séjour Ski Cohésion (6e)",        c:"#2563EB"},
+    {id:"sante",   name:"EPS Santé — Condition physique",  c:"#059669"},
+    {id:"as",      name:"AS / UNSS — fonctionnement",      c:"#EA580C"},
+    {id:"compet",  name:"Compétitions UNSS / AS",          c:"#DB2777"},
+    {id:"psc1",    name:"PSC1 — Secourisme (5e)",          c:"#DC2626"},
+    {id:"podo",    name:"Podomètre × SVT (5e)",            c:"#7C3AED"},
+    {id:"pleinair",name:"Plein Air Hauts-de-Seine",        c:"#0891B2"},
+    {id:"concert", name:"Concertations / Réunions",        c:"#475569"},
+    {id:"autre",   name:"Autres projets",                  c:"#CA8A04"}
   ];
   const A = [
     {id:"eps",   name:"Profs EPS",        c:"#0EA5E9"},
@@ -291,7 +304,6 @@ function defaultData(){
   let n=0; const id=()=>"t"+(n++);
   const t=(p,title,s,e,act,crit,note)=>({id:id(),p,title,s,e:(e==null?s:e),act,crit:!!crit,note:note||"",done:false});
   const T = [
-    // SKI
     t("ski","Relancer la recherche de co-financements (alléger les 484 €/élève)",0,0,["admin","eps"],true,"À démarrer dès septembre, pas en janvier."),
     t("ski","Réserver chalets (Belledonne + Alpages), train et pré-réserver l'ESF",0,1,["eps","ext"],true),
     t("ski","Budget prévisionnel + autorisation de sortie (CA)",1,1,["admin","eps"]),
@@ -302,7 +314,6 @@ function defaultData(){
     t("ski","Réunion parents pré-départ + check matériel + confirmation transport",6,6,["eps"]),
     t("ski","SÉJOUR — Chamrousse (≈ 30/03 → 03/04)",6,6,["eps"],false,"Date 2025-26 reprise comme matrice — à confirmer."),
     t("ski","Bilan à chaud + restitution carnet de bord (expo / affichage)",7,7,["eps"]),
-    // EPS SANTÉ
     t("sante","Réviser le protocole (retirer les tests lourds) + harmoniser la passation entre les 2 profs",0,0,["eps"],true,"À faire avant le déploiement de septembre."),
     t("sante","Lancer le « Bilan Parents » via l'ENT (sans dimension évaluative)",0,0,["eps","admin"]),
     t("sante","Campagne de tests — Trimestre 1 + saisie",0,3,["eps"]),
@@ -310,32 +321,27 @@ function defaultData(){
     t("sante","Campagne de tests — Trimestre 2",4,6,["eps"]),
     t("sante","Campagne de tests — Trimestre 3 + activation « Évolution 4 ans »",7,9,["eps"]),
     t("sante","Bilan annuel condition physique",9,9,["eps"]),
-    // AS
     t("as","Affiliation UNSS + ouverture HelloAsso + unifier le circuit (inclure Pass+ 92)",0,0,["eps"],true),
     t("as","Mettre en place les nouveaux créneaux (Futsal / Multi+CT compét. / CT loisir)",0,0,["eps"]),
     t("as","Communication ciblée mixité (filles → Circuit Training)",0,1,["eps"]),
     t("as","Régulariser les inscriptions HelloAsso oubliées + bilan AS",9,9,["eps"]),
-    // COMPÉTITIONS
     t("compet","Cross départemental 92 (promo AS + licences journée)",1,1,["eps","ext"]),
     t("compet","Futsal district — tours successifs",1,8,["eps","ext"]),
     t("compet","Formation / consolidation des Jeunes Officiels",0,10,["eps"]),
     t("compet","Championnat d'académie — Circuit Training",5,5,["eps","ext"]),
     t("compet","Tours Futsal Benjamins (objectif niveau académique)",7,8,["eps","ext"]),
-    // PSC1
     t("psc1","Demander la dotation HSE (≥ 20h) — AVANT la DGH / répartition",2,3,["admin","eps"],true,"Le nerf de la guerre : 38h faites pour 9h payées cette année."),
     t("psc1","Décider du format (hybride Éléa vs 100 % présentiel)",4,4,["eps"]),
     t("psc1","Préparer Éléa + diaporamas + matériel + planifier ~7 sessions (3 classes, ~76 él.)",6,6,["eps"]),
     t("psc1","Mise en ligne du parcours Éléa + relances familles",7,7,["eps"]),
     t("psc1","Sessions PSC1 (~7)",8,9,["eps"]),
     t("psc1","Saisie des résultats + nettoyage / rangement du matériel",9,9,["eps"]),
-    // PODOMÈTRE
     t("podo","Co-construire le planning avec Mme Dussaut (SVT) — caler les périodes",0,1,["eps","disc"],true),
     t("podo","Décision matériel + dossiers de financement (Fonds d'innovation via chef d'étab., mairie, AS)",1,2,["eps","admin"],true,"Délai de commande des podomètres connectés à anticiper."),
     t("podo","Commander le matériel + protocole de prêt (fiche signée, numérotation, registre)",3,4,["eps"]),
     t("podo","Désigner 2 élèves ambassadeurs / classe (collecte + saisie) + préparer l'affichage",6,6,["eps","ambass"]),
     t("podo","Déroulé du projet (2 périodes par classe)",7,8,["eps","disc","ambass"]),
     t("podo","Questionnaire d'évaluation anonyme + bilan",9,9,["eps"]),
-    // PLEIN AIR
     t("pleinair","Caler les dates avec le Département (Ruffio CO / Aubry Biathlon) + réserver les journées banalisées",0,1,["eps","admin","ext"],true),
     t("pleinair","Biathlon 3e — Cycle 1 (7 séances)",1,3,["eps"]),
     t("pleinair","Biathlon 3e — Cycle 2 (7 séances)",3,5,["eps"]),
@@ -345,195 +351,252 @@ function defaultData(){
     t("pleinair","Cycle CO 6e — Haras de Jardy (~6 séances)",7,9,["eps","ext"]),
     t("pleinair","Trophée Aventure — ÉTENDRE aux 2 classes de 4e (inscription Département)",8,9,["eps","ext"],false,"Extension par rapport à 2025-26 (4A seule)."),
     t("pleinair","Bilan Plein Air",9,9,["eps"]),
-    // CONCERTATIONS
     t("concert","Réunion de pré-rentrée EPS — harmoniser les protocoles + répartir les projets",0,0,["eps"]),
     t("concert","Concertation EPS + SVT — cadrage du projet Podomètre",0,1,["eps","disc"]),
     t("concert","Conseil pédagogique — partage des tendances EPS Santé",4,4,["eps","admin"]),
     t("concert","Point d'étape mensuel entre profs EPS",0,10,["eps"]),
     t("concert","Concertation Tournoi Recyclerie (Sc. Physiques + éco-délégués)",2,2,["eps","disc"],false,"Projet à confirmer."),
-    // AUTRE
     t("autre","Tournoi Recyclerie — avec prof. Sc. Physiques + éco-délégués",3,3,["eps","disc"],false,"Projet possible — date à définir.")
   ];
+  const d = {projects:P, actors:A, tasks:T};
+  d.projects.forEach((p,i)=>p.o=i); d.actors.forEach((a,i)=>a.o=i); d.tasks.forEach((t,i)=>t.o=i);
+  return d;
+}
+
+/* ============ État & backend ============ */
+let state = {projects:[],actors:[],tasks:[]};
+let MODE = "memory";            // "firebase" | "local" | "memory"
+let fb = null;                  // { db, auth, mod:{...} }
+let seedTried = false;
+let view = "timeline";
+let filterProj = new Set(), filterActor = new Set();
+let editing = null;
+
+/* ---- Sérialisation Firebase ---- */
+const arrToMap = a => Object.fromEntries((a||[]).map(x=>[x,true]));
+const mapToArr = x => Array.isArray(x) ? x.filter(Boolean) : (x&&typeof x==="object" ? Object.keys(x).filter(k=>x[k]) : []);
+function taskToFb(t){ return {p:t.p,title:t.title,s:t.s,e:t.e,crit:!!t.crit,note:t.note||"",done:!!t.done,o:t.o??0,act:arrToMap(t.act)}; }
+function stateToFb(d){
+  return {
+    projects:Object.fromEntries(d.projects.map((p,i)=>[p.id,{name:p.name,c:p.c,o:p.o??i}])),
+    actors:Object.fromEntries(d.actors.map((a,i)=>[a.id,{name:a.name,c:a.c,o:a.o??i}])),
+    tasks:Object.fromEntries(d.tasks.map((t,i)=>[t.id,taskToFb({...t,o:t.o??i})]))
+  };
+}
+function stateFromFb(v){
+  const P=Object.entries(v.projects||{}).map(([id,p])=>({id,name:p.name,c:p.c,o:p.o??99})).sort((a,b)=>a.o-b.o);
+  const A=Object.entries(v.actors||{}).map(([id,a])=>({id,name:a.name,c:a.c,o:a.o??99})).sort((a,b)=>a.o-b.o);
+  const T=Object.entries(v.tasks||{}).map(([id,t])=>({id,p:t.p,title:t.title,s:+t.s,e:+t.e,crit:!!t.crit,note:t.note||"",done:!!t.done,o:t.o??99,act:mapToArr(t.act)}));
   return {projects:P, actors:A, tasks:T};
 }
 
-/* ============ État & stockage ============ */
-let state = null;
-let view = "timeline";
-let filterProj = new Set();   // empty = tous
-let filterActor = new Set();
-let editing = null;
+/* ---- Stockage local (repli) ---- */
+function localOk(){ try{ localStorage.setItem("__t","1"); localStorage.removeItem("__t"); return true; }catch(e){ return false; } }
+function loadLocal(){ try{ const r=localStorage.getItem(LS_KEY); return r?JSON.parse(r):null; }catch(e){ return null; } }
+function saveLocal(){ if(MODE==="local"){ try{ localStorage.setItem(LS_KEY, JSON.stringify(state)); }catch(e){} } }
 
-const hasStore = (typeof window!=="undefined" && window.storage && typeof window.storage.get==="function");
-
-async function load(){
-  if(hasStore){
-    try{ const r = await window.storage.get(STORAGE_KEY); if(r && r.value){ state = JSON.parse(r.value); return; } }catch(e){}
+/* ============ Initialisation ============ */
+(async function init(){
+  const cfg = FIREBASE_CONFIG;
+  const configured = cfg && cfg.apiKey && cfg.apiKey.indexOf("COLLE_ICI")===-1;
+  if(configured){
+    try{
+      const base="https://www.gstatic.com/firebasejs/"+FB_VERSION+"/";
+      const [appM, dbM, authM] = await Promise.all([
+        import(base+"firebase-app.js"),
+        import(base+"firebase-database.js"),
+        import(base+"firebase-auth.js")
+      ]);
+      const app = appM.initializeApp(cfg);
+      fb = { db:dbM.getDatabase(app), auth:authM.getAuth(app), db_m:dbM, auth_m:authM };
+      MODE = "firebase";
+      setupAuth();
+      return;
+    }catch(e){ console.warn("Firebase indisponible → mode local.", e); }
   }
-  state = defaultData();
-  await save();
+  // Repli local / mémoire
+  MODE = localOk() ? "local" : "memory";
+  state = loadLocal() || defaultData();
+  showApp(); render();
+})();
+
+/* ============ Authentification ============ */
+function setupAuth(){
+  const { onAuthStateChanged } = fb.auth_m;
+  onAuthStateChanged(fb.auth, user=>{
+    if(!user){ showLogin(); return; }
+    const email=(user.email||"").toLowerCase();
+    if(!user.emailVerified || ALLOW.indexOf(email)===-1){ showDenied(email); return; }
+    showApp(); attachDb();
+  });
 }
-async function save(){
-  if(!hasStore) return;
-  try{ await window.storage.set(STORAGE_KEY, JSON.stringify(state)); }catch(e){}
+async function doLogin(){
+  try{
+    const { GoogleAuthProvider, signInWithPopup } = fb.auth_m;
+    await signInWithPopup(fb.auth, new GoogleAuthProvider());
+  }catch(e){ alert("Connexion impossible : "+(e&&e.message?e.message:e)); }
 }
+async function doLogout(){ try{ await fb.auth_m.signOut(fb.auth); }catch(e){} }
+
+function attachDb(){
+  const { ref, onValue } = fb.db_m;
+  onValue(ref(fb.db,"planning"), snap=>{
+    const v=snap.val();
+    if(!v || !v.tasks){
+      if(!seedTried){ seedTried=true; seedFirebase(); }
+      return;
+    }
+    state = stateFromFb(v); render();
+  });
+}
+async function seedFirebase(){
+  try{ await fb.db_m.set(fb.db_m.ref(fb.db,"planning"), stateToFb(defaultData())); }
+  catch(e){ console.warn("Seed impossible",e); }
+}
+
+/* ============ Écrans (gate) ============ */
+function gate(html){
+  const g=document.getElementById("gate"), app=document.getElementById("app");
+  if(html===null){ g.classList.remove("on"); app.classList.add("on"); return; }
+  g.innerHTML='<div class="gatecard">'+html+'</div>'; g.classList.add("on"); app.classList.remove("on");
+}
+const GLOGO='<svg class="g" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.6l6.7-6.7C35.6 2.6 30.2 0 24 0 14.6 0 6.4 5.4 2.5 13.3l7.8 6.1C12.2 13.7 17.6 9.5 24 9.5z"/><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8C43.8 38 46.5 31.9 46.5 24.5z"/><path fill="#FBBC05" d="M10.3 28.6c-.5-1.5-.8-3-.8-4.6s.3-3.1.8-4.6l-7.8-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.5 10.7l7.8-6.1z"/><path fill="#34A853" d="M24 48c6.2 0 11.5-2 15.3-5.5l-7.5-5.8c-2 1.4-4.7 2.3-7.8 2.3-6.4 0-11.8-4.2-13.7-9.9l-7.8 6.1C6.4 42.6 14.6 48 24 48z"/></svg>';
+
+function showLogin(){
+  gate('<div class="eyebrow">Collège Yves du Manoir — EPS</div><h2>Pilotage des projets</h2><p>Espace réservé à l\'équipe EPS. Connecte-toi avec ton compte Google.</p><button class="gbtn" id="gBtn">'+GLOGO+'Se connecter avec Google</button>');
+  document.getElementById("gBtn").onclick=doLogin;
+}
+function showDenied(email){
+  gate('<div class="eyebrow">Accès restreint</div><h2>Compte non autorisé</h2><p>Le compte <span class="gemail">'+esc(email||"?")+'</span> n\'a pas accès à cet espace. Connecte-toi avec un compte de l\'équipe EPS.</p><button class="gbtn" id="gOut">Changer de compte</button>');
+  document.getElementById("gOut").onclick=doLogout;
+}
+function showApp(){ gate(null); render(); }
 
 /* ============ Utilitaires ============ */
+const sortedProjects = ()=>[...state.projects].sort((a,b)=>(a.o??0)-(b.o??0));
 const proj = id => state.projects.find(p=>p.id===id) || {name:"?",c:"#999"};
 const actor = id => state.actors.find(a=>a.id===id) || {name:"?",c:"#999"};
 function whenLabel(s,e){ if(e>s) return MONTHS[s]+" "+MYEAR[s].slice(2)+" → "+MONTHS[e]+" "+MYEAR[e].slice(2); return MONTHS[s]+" "+MYEAR[s]; }
 function esc(s){ return (s||"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c])); }
-
 function todayFrac(){
-  const now = new Date();
-  const start = new Date(2026,8,1), end = new Date(2027,6,31);
-  if(now < start) return 0;
-  if(now > end) return 11;
-  const mi = (now.getFullYear()-2026)*12 + (now.getMonth()-8);
-  const dim = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
-  return Math.max(0, Math.min(11, mi + (now.getDate()-1)/dim));
+  const now=new Date(), start=new Date(2026,8,1), end=new Date(2027,6,31);
+  if(now<start) return 0; if(now>end) return 11;
+  const mi=(now.getFullYear()-2026)*12+(now.getMonth()-8);
+  const dim=new Date(now.getFullYear(),now.getMonth()+1,0).getDate();
+  return Math.max(0,Math.min(11,mi+(now.getDate()-1)/dim));
 }
 function statusOf(tk){
-  if(tk.done) return "done";
-  const f = todayFrac();
-  if(f===0) return "upcoming";
-  if(tk.e+1 <= f) return "late";
-  if(tk.s <= f && f < tk.e+1) return "now";
-  return "upcoming";
+  if(tk.done) return "done"; const f=todayFrac(); if(f===0) return "upcoming";
+  if(tk.e+1<=f) return "late"; if(tk.s<=f && f<tk.e+1) return "now"; return "upcoming";
 }
-
-/* ============ Filtres ============ */
 function passes(tk){
   if(filterProj.size && !filterProj.has(tk.p)) return false;
   if(filterActor.size && !tk.act.some(a=>filterActor.has(a))) return false;
-  const q = document.getElementById("search").value.trim().toLowerCase();
-  if(q && !(tk.title.toLowerCase().includes(q) || (tk.note||"").toLowerCase().includes(q))) return false;
+  const q=document.getElementById("search").value.trim().toLowerCase();
+  if(q && !(tk.title.toLowerCase().includes(q)||(tk.note||"").toLowerCase().includes(q))) return false;
   return true;
 }
 
-/* ============ Rendu : entête ============ */
+/* ============ Persistance (selon le mode) ============ */
+async function fbSet(path,val){ try{ await fb.db_m.set(fb.db_m.ref(fb.db,path),val); }catch(e){ alert("Enregistrement refusé : "+(e.message||e)); } }
+async function fbUpdate(path,val){ try{ await fb.db_m.update(fb.db_m.ref(fb.db,path),val); }catch(e){ alert("Enregistrement refusé : "+(e.message||e)); } }
+async function fbRemove(path){ try{ await fb.db_m.remove(fb.db_m.ref(fb.db,path)); }catch(e){ alert("Suppression refusée : "+(e.message||e)); } }
+
+/* ============ Rendu ============ */
+function render(){ renderStatus(); renderHeader(); renderFilters(); renderTimeline(); renderList(); }
+
+function renderStatus(){
+  const sb=document.getElementById("statusbar"); if(!sb) return; sb.innerHTML="";
+  if(MODE==="firebase"){
+    const u=fb.auth.currentUser;
+    sb.innerHTML='<span class="pill sync"><span class="d"></span>Synchronisé · <b>'+esc(u?u.email:"")+'</b></span><button class="linkbtn" id="lo">Déconnexion</button>';
+    const lo=document.getElementById("lo"); if(lo) lo.onclick=doLogout;
+  } else if(MODE==="local"){
+    sb.innerHTML='<span class="pill local"><span class="d"></span>Mode local (ce navigateur uniquement) · Firebase non connecté</span>';
+  } else {
+    sb.innerHTML='<span class="pill local"><span class="d"></span>Aperçu (sans sauvegarde) — la version en ligne utilise Firebase</span>';
+  }
+}
 function renderHeader(){
-  const now = new Date();
-  const fmt = now.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-  document.getElementById("todayDate").textContent = "Aujourd'hui — "+fmt;
-  const f = todayFrac();
-  document.getElementById("todayNote").textContent = (f===0)
-    ? "Année 2026-2027 à venir · démarrage en septembre"
-    : "Repère « aujourd'hui » : "+MONTHS[Math.floor(f)]+" "+MYEAR[Math.floor(f)];
-  const tot = state.tasks.length, done = state.tasks.filter(t=>t.done).length;
-  const pct = tot? Math.round(done/tot*100):0;
-  document.getElementById("progFill").style.width = pct+"%";
-  document.getElementById("progLab").textContent = done+" / "+tot+" tâches faites · "+pct+"%";
-  document.documentElement.style.setProperty("--todayfrac", (f/11).toFixed(4));
+  const now=new Date();
+  document.getElementById("todayDate").textContent="Aujourd'hui — "+now.toLocaleDateString("fr-FR",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+  const f=todayFrac();
+  document.getElementById("todayNote").textContent=(f===0)?"Année 2026-2027 à venir · démarrage en septembre":"Repère « aujourd'hui » : "+MONTHS[Math.floor(f)]+" "+MYEAR[Math.floor(f)];
+  const tot=state.tasks.length, done=state.tasks.filter(t=>t.done).length, pct=tot?Math.round(done/tot*100):0;
+  document.getElementById("progFill").style.width=pct+"%";
+  document.getElementById("progLab").textContent=done+" / "+tot+" tâches faites · "+pct+"%";
+  document.documentElement.style.setProperty("--todayfrac",(f/11).toFixed(4));
 }
-
-/* ============ Rendu : filtres & légende ============ */
 function renderFilters(){
-  const pf = document.getElementById("projFilter"); pf.innerHTML="";
-  state.projects.forEach(p=>{
-    const on = filterProj.has(p.id);
-    const el = document.createElement("div");
-    el.className = "chip"+(on?" on":""); el.style.setProperty("--c",p.c);
-    el.innerHTML = `<span class="dot"></span>${esc(p.name)}`;
-    el.onclick = ()=>{ on?filterProj.delete(p.id):filterProj.add(p.id); render(); };
-    pf.appendChild(el);
+  const pf=document.getElementById("projFilter"); pf.innerHTML="";
+  sortedProjects().forEach(p=>{
+    const on=filterProj.has(p.id), el=document.createElement("div");
+    el.className="chip"+(on?" on":""); el.style.setProperty("--c",p.c);
+    el.innerHTML='<span class="dot"></span>'+esc(p.name);
+    el.onclick=()=>{ on?filterProj.delete(p.id):filterProj.add(p.id); render(); }; pf.appendChild(el);
   });
-  const af = document.getElementById("actorFilter"); af.innerHTML="";
+  const af=document.getElementById("actorFilter"); af.innerHTML="";
   state.actors.forEach(a=>{
-    const on = filterActor.has(a.id);
-    const el = document.createElement("div");
-    el.className = "chip"+(on?" on":""); el.style.setProperty("--c",a.c);
-    el.innerHTML = `<span class="dot"></span>${esc(a.name)}`;
-    el.onclick = ()=>{ on?filterActor.delete(a.id):filterActor.add(a.id); render(); };
-    af.appendChild(el);
+    const on=filterActor.has(a.id), el=document.createElement("div");
+    el.className="chip"+(on?" on":""); el.style.setProperty("--c",a.c);
+    el.innerHTML='<span class="dot"></span>'+esc(a.name);
+    el.onclick=()=>{ on?filterActor.delete(a.id):filterActor.add(a.id); render(); }; af.appendChild(el);
   });
-  const lg = document.getElementById("legend"); lg.innerHTML="";
-  state.projects.forEach(p=>{
-    const li = document.createElement("span"); li.className="li";
-    li.innerHTML = `<i style="background:${p.c}"></i>${esc(p.name)}`; lg.appendChild(li);
-  });
-  const crit = document.createElement("span"); crit.className="li";
-  crit.innerHTML = `<i style="background:repeating-linear-gradient(45deg,#999,#999 4px,#555 4px,#555 8px)"></i>hachuré = échéance critique`;
-  lg.appendChild(crit);
+  const lg=document.getElementById("legend"); lg.innerHTML="";
+  sortedProjects().forEach(p=>{ const li=document.createElement("span"); li.className="li"; li.innerHTML='<i style="background:'+p.c+'"></i>'+esc(p.name); lg.appendChild(li); });
+  const cr=document.createElement("span"); cr.className="li"; cr.innerHTML='<i style="background:repeating-linear-gradient(45deg,#999,#999 4px,#555 4px,#555 8px)"></i>hachuré = échéance critique'; lg.appendChild(cr);
 }
-
-/* ============ Rendu : timeline ============ */
 function renderTimeline(){
-  const inner = document.getElementById("tlInner"); inner.innerHTML="";
-  // header
-  const head = document.createElement("div"); head.className="tl-head";
-  let mh = `<div class="corner">Projet / tâche</div><div class="months">`;
-  for(let i=0;i<11;i++) mh += `<div class="mcell">${MONTHS[i]}<small>${MYEAR[i]}</small></div>`;
-  mh += `</div>`; head.innerHTML = mh; inner.appendChild(head);
-
-  const body = document.createElement("div"); body.className="tl-body";
-  let any=false;
-  state.projects.forEach(p=>{
-    const tasks = state.tasks.filter(t=>t.p===p.id && passes(t)).sort((a,b)=>a.s-b.s);
+  const inner=document.getElementById("tlInner"); inner.innerHTML="";
+  const head=document.createElement("div"); head.className="tl-head";
+  let mh='<div class="corner">Projet / tâche</div><div class="months">';
+  for(let i=0;i<11;i++) mh+='<div class="mcell">'+MONTHS[i]+'<small>'+MYEAR[i]+'</small></div>';
+  head.innerHTML=mh+'</div>'; inner.appendChild(head);
+  const body=document.createElement("div"); body.className="tl-body"; let any=false;
+  sortedProjects().forEach(p=>{
+    const tasks=state.tasks.filter(t=>t.p===p.id&&passes(t)).sort((a,b)=>a.s-b.s||(a.o??0)-(b.o??0));
     if(!tasks.length) return; any=true;
-    const lh = document.createElement("div"); lh.className="lane-head"; lh.style.setProperty("--c",p.c);
-    const done = tasks.filter(t=>t.done).length;
-    lh.innerHTML = `<span class="pdot"></span><span class="pname">${esc(p.name)}</span><span class="pcount">${done}/${tasks.length}</span>`;
+    const done=tasks.filter(t=>t.done).length;
+    const lh=document.createElement("div"); lh.className="lane-head"; lh.style.setProperty("--c",p.c);
+    lh.innerHTML='<span class="pdot"></span><span class="pname">'+esc(p.name)+'</span><span class="pcount">'+done+'/'+tasks.length+'</span>';
     body.appendChild(lh);
     tasks.forEach(tk=>{
-      const row = document.createElement("div"); row.className="lane-row"+(tk.done?" done":""); row.style.setProperty("--c",p.c);
-      const cs = tk.s+1, ce = tk.e+2;
-      row.innerHTML =
-        `<div class="label"><input type="checkbox" class="ck" ${tk.done?"checked":""} data-id="${tk.id}">
-           <span class="tt" data-edit="${tk.id}">${esc(tk.title)}${tk.crit?' <span class="crit-flag">CRIT</span>':''}</span></div>
-         <div class="track"><div class="bar ${tk.crit?'crit':''}" style="--cs:${cs};--ce:${ce}" data-edit="${tk.id}"><span class="blab">${esc(whenLabel(tk.s,tk.e))}</span></div></div>`;
+      const row=document.createElement("div"); row.className="lane-row"+(tk.done?" done":""); row.style.setProperty("--c",p.c);
+      row.innerHTML='<div class="label"><input type="checkbox" class="ck" '+(tk.done?"checked":"")+' data-id="'+tk.id+'"><span class="tt" data-edit="'+tk.id+'">'+esc(tk.title)+(tk.crit?' <span class="crit-flag">CRIT</span>':'')+'</span></div>'+
+        '<div class="track"><div class="bar '+(tk.crit?'crit':'')+'" style="--cs:'+(tk.s+1)+';--ce:'+(tk.e+2)+'" data-edit="'+tk.id+'"><span class="blab">'+esc(whenLabel(tk.s,tk.e))+'</span></div></div>';
       body.appendChild(row);
     });
   });
-  if(!any) body.innerHTML = `<div class="empty">Aucune tâche ne correspond aux filtres.</div>`;
-  const line = document.createElement("div"); line.className="today-line";
-  line.innerHTML = `<span class="pin">auj.</span>`;
-  body.appendChild(line);
-  inner.appendChild(body);
-  wireChecks(inner); wireEdits(inner);
+  if(!any) body.innerHTML='<div class="empty">Aucune tâche ne correspond aux filtres.</div>';
+  const line=document.createElement("div"); line.className="today-line"; line.innerHTML='<span class="pin">auj.</span>'; body.appendChild(line);
+  inner.appendChild(body); wireChecks(inner); wireEdits(inner);
 }
-
-/* ============ Rendu : liste ============ */
 function renderList(){
-  const wrap = document.getElementById("listWrap"); wrap.innerHTML="";
-  let any=false;
-  state.projects.forEach(p=>{
-    const tasks = state.tasks.filter(t=>t.p===p.id && passes(t)).sort((a,b)=>a.s-b.s || (b.crit-a.crit));
+  const wrap=document.getElementById("listWrap"); wrap.innerHTML=""; let any=false;
+  sortedProjects().forEach(p=>{
+    const tasks=state.tasks.filter(t=>t.p===p.id&&passes(t)).sort((a,b)=>a.s-b.s||(b.crit-a.crit)||(a.o??0)-(b.o??0));
     if(!tasks.length) return; any=true;
-    const done = tasks.filter(t=>t.done).length, pct = Math.round(done/tasks.length*100);
-    const box = document.createElement("div"); box.className="list-proj"; box.style.setProperty("--c",p.c);
-    let h = `<div class="lh"><span class="pdot"></span><h3>${esc(p.name)}</h3>
-      <span class="mini"><span class="bar"><i style="width:${pct}%"></i></span><span>${done}/${tasks.length}</span></span></div>`;
+    const done=tasks.filter(t=>t.done).length, pct=Math.round(done/tasks.length*100);
+    const box=document.createElement("div"); box.className="list-proj"; box.style.setProperty("--c",p.c);
+    let h='<div class="lh"><span class="pdot"></span><h3>'+esc(p.name)+'</h3><span class="mini"><span class="bar"><i style="width:'+pct+'%"></i></span><span>'+done+'/'+tasks.length+'</span></span></div>';
     tasks.forEach(tk=>{
-      const st = statusOf(tk);
-      const whenCls = st==="late"?"late":(st==="now"?"now":"");
-      const tags = tk.act.map(a=>{const A=actor(a);return `<span class="atag" style="--ac:${A.c}"><span class="d"></span>${esc(A.name)}</span>`;}).join("");
-      h += `<div class="titem ${tk.done?"done":""}">
-        <input type="checkbox" class="ck" ${tk.done?"checked":""} data-id="${tk.id}">
-        <div class="mid">
-          <span class="tt" data-edit="${tk.id}">${esc(tk.title)}${tk.crit?' <span class="crit-flag">CRITIQUE</span>':''}</span>
-          <div class="meta"><span class="when ${whenCls}">${esc(whenLabel(tk.s,tk.e))}</span>${tags}</div>
-          ${tk.note?`<div class="tnote">${esc(tk.note)}</div>`:""}
-        </div>
-        <button class="edit no-print" data-edit="${tk.id}">✎</button>
-      </div>`;
+      const st=statusOf(tk), wc=st==="late"?"late":(st==="now"?"now":"");
+      const tags=tk.act.map(a=>{const A=actor(a);return '<span class="atag" style="--ac:'+A.c+'"><span class="d"></span>'+esc(A.name)+'</span>';}).join("");
+      h+='<div class="titem '+(tk.done?"done":"")+'"><input type="checkbox" class="ck" '+(tk.done?"checked":"")+' data-id="'+tk.id+'"><div class="mid"><span class="tt" data-edit="'+tk.id+'">'+esc(tk.title)+(tk.crit?' <span class="crit-flag">CRITIQUE</span>':'')+'</span><div class="meta"><span class="when '+wc+'">'+esc(whenLabel(tk.s,tk.e))+'</span>'+tags+'</div>'+(tk.note?'<div class="tnote">'+esc(tk.note)+'</div>':'')+'</div><button class="edit no-print" data-edit="'+tk.id+'">✎</button></div>';
     });
-    box.innerHTML = h; wrap.appendChild(box);
+    box.innerHTML=h; wrap.appendChild(box);
   });
-  if(!any) wrap.innerHTML = `<div class="empty">Aucune tâche ne correspond aux filtres.</div>`;
+  if(!any) wrap.innerHTML='<div class="empty">Aucune tâche ne correspond aux filtres.</div>';
   wireChecks(wrap); wireEdits(wrap);
 }
+function wireChecks(root){ root.querySelectorAll(".ck[data-id]").forEach(c=>{ c.onchange=()=>toggleDone(c.dataset.id,c.checked); }); }
+function wireEdits(root){ root.querySelectorAll("[data-edit]").forEach(el=>{ el.style.cursor="pointer"; el.onclick=()=>openTask(el.dataset.edit); }); }
 
-function wireChecks(root){
-  root.querySelectorAll(".ck[data-id]").forEach(c=>{
-    c.onchange = async ()=>{ const tk = state.tasks.find(t=>t.id===c.dataset.id); if(tk){ tk.done=c.checked; await save(); render(); } };
-  });
+/* ============ Actions ============ */
+function toggleDone(id,checked){
+  const tk=state.tasks.find(t=>t.id===id); if(!tk) return; tk.done=checked; render();
+  if(MODE==="firebase") fbUpdate("planning/tasks/"+id,{done:checked}); else saveLocal();
 }
-function wireEdits(root){
-  root.querySelectorAll("[data-edit]").forEach(el=>{ el.style.cursor="pointer"; el.onclick=()=>openTask(el.dataset.edit); });
-}
-
-/* ============ Vue ============ */
 function setView(v){
   view=v;
   document.getElementById("view-timeline").classList.toggle("on",v==="timeline");
@@ -541,74 +604,76 @@ function setView(v){
   document.getElementById("vTimeline").classList.toggle("on",v==="timeline");
   document.getElementById("vList").classList.toggle("on",v==="list");
 }
-function render(){ renderHeader(); renderFilters(); renderTimeline(); renderList(); }
-
-/* ============ Modale tâche ============ */
 function fillSelects(){
-  const ps = document.getElementById("fProject"); ps.innerHTML = state.projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("");
-  const opt = i=>`<option value="${i}">${MONTHS[i]} ${MYEAR[i]}</option>`;
-  document.getElementById("fStart").innerHTML = MONTHS.map((m,i)=>opt(i)).join("");
-  document.getElementById("fEnd").innerHTML   = MONTHS.map((m,i)=>opt(i)).join("");
-  const fa = document.getElementById("fActors"); fa.innerHTML="";
+  document.getElementById("fProject").innerHTML=sortedProjects().map(p=>'<option value="'+p.id+'">'+esc(p.name)+'</option>').join("");
+  const opt=i=>'<option value="'+i+'">'+MONTHS[i]+' '+MYEAR[i]+'</option>';
+  document.getElementById("fStart").innerHTML=MONTHS.map((m,i)=>opt(i)).join("");
+  document.getElementById("fEnd").innerHTML=MONTHS.map((m,i)=>opt(i)).join("");
+  const fa=document.getElementById("fActors"); fa.innerHTML="";
   state.actors.forEach(a=>{
-    const lab=document.createElement("label"); lab.innerHTML=`<input type="checkbox" value="${a.id}"><span style="width:8px;height:8px;border-radius:50%;background:${a.c};display:inline-block"></span>${esc(a.name)}`;
-    const cb=lab.querySelector("input"); cb.onchange=()=>lab.classList.toggle("on",cb.checked);
-    fa.appendChild(lab);
+    const lab=document.createElement("label");
+    lab.innerHTML='<input type="checkbox" value="'+a.id+'"><span style="width:8px;height:8px;border-radius:50%;background:'+a.c+';display:inline-block"></span>'+esc(a.name);
+    const cb=lab.querySelector("input"); cb.onchange=()=>lab.classList.toggle("on",cb.checked); fa.appendChild(lab);
   });
 }
 function openTask(id){
-  fillSelects();
-  editing = id||null;
-  const tk = id? state.tasks.find(t=>t.id===id):null;
-  document.getElementById("taskTitle").textContent = tk? "Modifier la tâche":"Nouvelle tâche";
-  document.getElementById("fTitle").value = tk?tk.title:"";
-  document.getElementById("fProject").value = tk?tk.p:state.projects[0].id;
-  document.getElementById("fStart").value = tk?tk.s:0;
-  document.getElementById("fEnd").value = tk?tk.e:0;
-  document.getElementById("fNote").value = tk?tk.note:"";
-  document.getElementById("fCrit").checked = tk?tk.crit:false;
-  document.querySelectorAll("#fActors label").forEach(l=>{ const cb=l.querySelector("input"); cb.checked = tk?tk.act.includes(cb.value):false; l.classList.toggle("on",cb.checked); });
-  document.getElementById("delTaskBtn").style.display = tk?"inline-flex":"none";
+  fillSelects(); editing=id||null;
+  const tk=id?state.tasks.find(t=>t.id===id):null;
+  document.getElementById("taskTitle").textContent=tk?"Modifier la tâche":"Nouvelle tâche";
+  document.getElementById("fTitle").value=tk?tk.title:"";
+  document.getElementById("fProject").value=tk?tk.p:sortedProjects()[0].id;
+  document.getElementById("fStart").value=tk?tk.s:0;
+  document.getElementById("fEnd").value=tk?tk.e:0;
+  document.getElementById("fNote").value=tk?tk.note:"";
+  document.getElementById("fCrit").checked=tk?tk.crit:false;
+  document.querySelectorAll("#fActors label").forEach(l=>{ const cb=l.querySelector("input"); cb.checked=tk?tk.act.includes(cb.value):false; l.classList.toggle("on",cb.checked); });
+  document.getElementById("delTaskBtn").style.display=tk?"inline-flex":"none";
   openOv("ovTask");
 }
-async function saveTask(){
+function saveTask(){
   const title=document.getElementById("fTitle").value.trim(); if(!title){ document.getElementById("fTitle").focus(); return; }
   let s=+document.getElementById("fStart").value, e=+document.getElementById("fEnd").value; if(e<s) e=s;
   const act=[...document.querySelectorAll("#fActors input:checked")].map(i=>i.value);
-  const data={title, p:document.getElementById("fProject").value, s, e, act, crit:document.getElementById("fCrit").checked, note:document.getElementById("fNote").value.trim()};
-  if(editing){ Object.assign(state.tasks.find(t=>t.id===editing), data); }
-  else { data.id="t"+Date.now()+Math.random().toString(36).slice(2,5); data.done=false; state.tasks.push(data); }
-  await save(); closeOv("ovTask"); render();
+  const data={title,p:document.getElementById("fProject").value,s,e,act,crit:document.getElementById("fCrit").checked,note:document.getElementById("fNote").value.trim()};
+  if(editing){ const tk=state.tasks.find(t=>t.id===editing); Object.assign(tk,data); }
+  else { data.id="t"+Date.now()+Math.random().toString(36).slice(2,5); data.done=false; data.o=Date.now(); state.tasks.push(data); editing=data.id; }
+  const tk=state.tasks.find(t=>t.id===editing); render();
+  if(MODE==="firebase") fbSet("planning/tasks/"+tk.id,taskToFb(tk)); else saveLocal();
+  closeOv("ovTask");
 }
-async function deleteTask(){
-  if(editing && confirm("Supprimer cette tâche ?")){ state.tasks=state.tasks.filter(t=>t.id!==editing); await save(); closeOv("ovTask"); render(); }
+function deleteTask(){
+  if(!editing||!confirm("Supprimer cette tâche ?")) return;
+  const id=editing; state.tasks=state.tasks.filter(t=>t.id!==id); render();
+  if(MODE==="firebase") fbRemove("planning/tasks/"+id); else saveLocal();
+  closeOv("ovTask");
 }
-
-/* ============ Projet / Acteur ============ */
 function openProject(){ document.getElementById("pName").value=""; openOv("ovProject"); }
-async function saveProject(){
+function saveProject(){
   const name=document.getElementById("pName").value.trim(); if(!name) return;
-  state.projects.push({id:"p"+Date.now().toString(36), name, c:document.getElementById("pColor").value});
-  await save(); closeOv("ovProject"); render();
+  const p={id:"p"+Date.now().toString(36),name,c:document.getElementById("pColor").value,o:state.projects.length};
+  state.projects.push(p); render();
+  if(MODE==="firebase") fbSet("planning/projects/"+p.id,{name:p.name,c:p.c,o:p.o}); else saveLocal();
+  closeOv("ovProject");
 }
 function openActor(){ document.getElementById("aName").value=""; openOv("ovActor"); }
-async function saveActor(){
+function saveActor(){
   const name=document.getElementById("aName").value.trim(); if(!name) return;
-  state.actors.push({id:"a"+Date.now().toString(36), name, c:document.getElementById("aColor").value});
-  await save(); closeOv("ovActor"); render();
+  const a={id:"a"+Date.now().toString(36),name,c:document.getElementById("aColor").value,o:state.actors.length};
+  state.actors.push(a); render();
+  if(MODE==="firebase") fbSet("planning/actors/"+a.id,{name:a.name,c:a.c,o:a.o}); else saveLocal();
+  closeOv("ovActor");
 }
-async function resetAll(){
-  if(confirm("Restaurer le modèle d'origine ? Cela efface vos ajouts et l'avancement coché.")){ state=defaultData(); await save(); render(); }
+function resetAll(){
+  if(!confirm("Restaurer le modèle d'origine ? Cela efface vos ajouts et l'avancement coché — pour tout le monde.")) return;
+  state=defaultData(); render();
+  if(MODE==="firebase") fbSet("planning",stateToFb(state)); else saveLocal();
 }
 
-/* ============ Overlay helpers ============ */
+/* ============ Overlays ============ */
 function openOv(id){ document.getElementById(id).classList.add("on"); }
 function closeOv(id){ document.getElementById(id).classList.remove("on"); }
 document.querySelectorAll(".ov").forEach(o=>o.addEventListener("click",e=>{ if(e.target===o) o.classList.remove("on"); }));
 document.addEventListener("keydown",e=>{ if(e.key==="Escape") document.querySelectorAll(".ov.on").forEach(o=>o.classList.remove("on")); });
-
-/* ============ Init ============ */
-(async function(){ await load(); render(); })();
 </script>
 </body>
 </html>
